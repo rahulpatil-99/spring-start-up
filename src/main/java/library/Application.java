@@ -1,5 +1,7 @@
-package hello;
+package library;
 
+import library.domain.Reader;
+import library.repository.ReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +12,7 @@ public class Application implements CommandLineRunner {
 
 
     @Autowired
-    private CustomerRepository repository;
+    private ReaderRepository repository;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -21,26 +23,29 @@ public class Application implements CommandLineRunner {
         repository.deleteAll();
 
         // save a couple of customers
-        repository.save(new Customer("Rahul", "Patil"));
-        repository.save(new Customer("Vijay", "Patil"));
+        repository.save(new Reader("Rahul", "Patil"));
+        repository.save(new Reader("Vijay", "Patil"));
+        repository.save(new Reader("Rahul", "Pandey"));
 
         // fetch all customers
         System.out.println("Customers found with findAll():");
         System.out.println("-------------------------------");
-        for (Customer customer : repository.findAll()) {
-            System.out.println(customer);
+        for (Reader reader : repository.findAll()) {
+            System.out.println(reader);
         }
         System.out.println();
 
         // fetch an individual customer
-        System.out.println("Customer found with findByFirstName('Rahul'):");
+        System.out.println("Reader found with findByFirstName('Rahul'):");
         System.out.println("--------------------------------");
-        System.out.println(repository.findByFirstName("Rahul"));
+        for (Reader reader : repository.findByFirstName("Rahul")) {
+            System.out.println(reader);
+        }
 
         System.out.println("Customers found with findByLastName('Patil'):");
         System.out.println("--------------------------------");
-        for (Customer customer : repository.findByLastName("Patil")) {
-            System.out.println(customer);
+        for (Reader reader : repository.findByLastName("Patil")) {
+            System.out.println(reader);
         }
     }
 }
