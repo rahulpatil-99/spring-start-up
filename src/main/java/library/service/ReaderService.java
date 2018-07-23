@@ -16,12 +16,11 @@ public class ReaderService {
         this.readerRepository = readerRepository;
     }
 
-    public List<Reader> getByFirstName(String firstName) {
-        return readerRepository.findByFirstName(firstName);
-    }
-
-    public List<Reader> getByLastName(String lastName) {
-        return readerRepository.findByLastName(lastName);
+    public List<Reader> getByName(String name) {
+        List<Reader> byFirstName = readerRepository.findByFirstName(name);
+        List<Reader> byLastName = readerRepository.findByLastName(name);
+        byFirstName.addAll(byLastName);
+        return byFirstName;
     }
 
     public List<Reader> getByDOB(Date date) {

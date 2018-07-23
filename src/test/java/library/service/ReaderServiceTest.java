@@ -30,7 +30,7 @@ public class ReaderServiceTest {
 
     @Test
     public void shouldReturnEmptyListIfFirstNameDoesNotMatch() {
-        List<Reader> readers = readerService.getByFirstName("firstName");
+        List<Reader> readers = readerService.getByName("firstName");
         assertEquals(0,readers.size());
     }
 
@@ -38,13 +38,13 @@ public class ReaderServiceTest {
     public void shouldReturnReaderWhenFirstNameMatches() {
         Reader reader = new Reader("firstName", "LastName");
         when(readerRepository.findByFirstName("firstName")).thenReturn(Collections.singletonList(reader));
-        List<Reader> readers = readerService.getByFirstName("firstName");
+        List<Reader> readers = readerService.getByName("firstName");
         assertEquals(1,readers.size());
     }
 
     @Test
     public void shouldReturnEmptyListIfLastNameDoesNotMatch() {
-        List<Reader> readers = readerService.getByLastName("lastName");
+        List<Reader> readers = readerService.getByName("lastName");
         assertEquals(0,readers.size());
     }
 
@@ -52,7 +52,7 @@ public class ReaderServiceTest {
     public void shouldReturnReaderWhenLastNameMatches() {
         Reader reader = new Reader("firstName", "LastName");
         when(readerRepository.findByLastName("LastName")).thenReturn(Collections.singletonList(reader));
-        List<Reader> readers = readerService.getByLastName("LastName");
+        List<Reader> readers = readerService.getByName("LastName");
         assertEquals(1,readers.size());
     }
 
