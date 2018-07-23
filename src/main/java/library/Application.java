@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-
     @Autowired
     private ReaderRepository repository;
 
@@ -25,7 +24,7 @@ public class Application implements CommandLineRunner {
         // save a couple of customers
         repository.save(new Reader("Rahul", "Patil"));
         repository.save(new Reader("Vijay", "Patil"));
-        repository.save(new Reader("Rahul", "Pandey"));
+        repository.save(new Reader("Vivek", "Pandey"));
 
         // fetch all customers
         System.out.println("Customers found with findAll():");

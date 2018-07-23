@@ -11,7 +11,7 @@ public class Reader {
 
     private String firstName;
     private String lastName;
-    private Date dateOfBirth;
+    private Date dob;
 
     public Reader() {}
 
@@ -26,11 +26,11 @@ public class Reader {
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
+                ", dob=" + dob +
                 '}';
     }
 
     public void setDOB(Date dateOfBirth) {
-        this.dateOfBirth=dateOfBirth;
+        this.dob =dateOfBirth;
     }
 }
