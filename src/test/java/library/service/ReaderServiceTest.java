@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -20,6 +22,9 @@ public class ReaderServiceTest {
 
     @Mock
     private ReaderRepository readerRepository;
+
+    @Mock
+    private Reader reader;
 
     private ReaderService readerService;
 
@@ -75,5 +80,11 @@ public class ReaderServiceTest {
         when(readerRepository.findByDOB(new Date(30-05-1998))).thenReturn(Collections.singletonList(reader));
         List<Reader> readers = readerService.getByDOB(new Date(30-05-1998));
         assertEquals(1,readers.size());
+    }
+
+    @Test
+    public void shouldCallReaderRepositorySaveMethodToCreateReader() {
+        readerService.createReader(reader);
+        verify(readerRepository,times(1)).save(reader);
     }
 }

@@ -26,4 +26,8 @@ public class ReaderService {
     public List<Reader> getByDOB(Date date) {
         return readerRepository.findByDOB(date);
     }
+
+    public void createReader(Reader reader) {
+        readerRepository.save(reader);
+    }
 }

@@ -7,11 +7,11 @@ import java.util.Date;
 public class Reader {
 
     @Id
-    private String id;
+    public String id;
 
-    private String firstName;
-    private String lastName;
-    private Date dob;
+    public String firstName;
+    public String lastName;
+    public Date dob;
 
     public Reader() {}
 
