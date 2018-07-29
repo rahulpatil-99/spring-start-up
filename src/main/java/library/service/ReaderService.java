@@ -30,4 +30,8 @@ public class ReaderService {
     public void createReader(Reader reader) {
         readerRepository.save(reader);
     }
+
+    public void removeByFirstName(String firstName) {
+        readerRepository.deleteByFirstName(firstName);
+    }
 }

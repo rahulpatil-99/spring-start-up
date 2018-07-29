@@ -32,8 +32,16 @@ public class ReaderControllerTest {
     }
 
     @Test
-    public void shouldCallReaderServiceCreateUser() {
+    public void shouldCallReaderServiceCreateReader() {
         controller.createReader(reader);
         verify(readerService,times(1)).createReader(reader);
+    }
+
+    @Test
+    public void shouldCallReaderServiceRemoveByFirstName() {
+        Reader reader = new Reader("fName", "lName");
+        controller.createReader(reader);
+        controller.deleteReader("fName");
+        verify(readerService,times(1)).removeByFirstName("fName");
     }
 }

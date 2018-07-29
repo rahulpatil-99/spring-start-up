@@ -87,4 +87,10 @@ public class ReaderServiceTest {
         readerService.createReader(reader);
         verify(readerRepository,times(1)).save(reader);
     }
+
+    @Test
+    public void shouldCallReaderRepositoryDeleteByFirstName() {
+        readerService.removeByFirstName("someName");
+        verify(readerRepository,times(1)).deleteByFirstName("someName");
+    }
 }

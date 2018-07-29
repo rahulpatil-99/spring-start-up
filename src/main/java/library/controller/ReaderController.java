@@ -22,13 +22,18 @@ public class ReaderController {
         return "home";
     }
 
-    @GetMapping("/{userName}")
-    public List<Reader> getReader(@PathVariable String userName){
-        return readerService.getByName(userName);
+    @GetMapping("/{readerName}")
+    public List<Reader> getReader(@PathVariable String readerName){
+        return readerService.getByName(readerName);
     }
 
-    @PostMapping(value = "/user",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create",produces = MediaType.APPLICATION_JSON_VALUE)
     public void createReader(@RequestBody Reader reader){
         readerService.createReader(reader);
+    }
+
+    @DeleteMapping("/remove/{firstName}")
+    public void deleteReader(@PathVariable String firstName) {
+        readerService.removeByFirstName(firstName);
     }
 }
