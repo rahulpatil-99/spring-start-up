@@ -26,4 +26,8 @@ public class BookService {
     public Book getByIsbn(String isbn) {
         return bookRepository.findByIsbn(isbn);
     }
+
+    public Book getByBookId(String id) {
+        return bookRepository.findByBookId(id);
+    }
 }

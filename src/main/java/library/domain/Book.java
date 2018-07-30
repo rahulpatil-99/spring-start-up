@@ -1,9 +1,14 @@
 package library.domain;
 
+import org.springframework.data.annotation.Id;
+
 public class Book {
-    private String title;
-    private String author;
-    private String isbn;
+
+    @Id
+    public String bookId;
+    public String title;
+    public String author;
+    public String isbn;
 
     public Book(String title, String author, String isbn) {
         this.title = title;
@@ -14,7 +19,8 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + title + '\'' +
+                "bookId='" + bookId + '\'' +
+                ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", isbn='" + isbn + '\'' +
                 '}';

@@ -20,6 +20,8 @@ public class BookServiceTest {
     @Mock
     private BookRepository bookRepository;
     private BookService bookService;
+    @Mock
+    private Book book;
 
     @Before
     public void setUp() {
@@ -34,7 +36,6 @@ public class BookServiceTest {
 
     @Test
     public void shouldReturnListForAvailableBookName() {
-        Book book = new Book("some title", "abc", "123a");
         when(bookRepository.findByTitle("some title")).thenReturn(Collections.singletonList(book));
         List<Book> books = bookService.getByTitle("some title");
         assertEquals(1,books.size());
@@ -48,7 +49,6 @@ public class BookServiceTest {
 
     @Test
     public void shouldReturnAvailableBooksForGivenAuthorName() {
-        Book book = new Book("some title", "some author", "123a");
         when(bookRepository.findByAuthor("some author")).thenReturn(Collections.singletonList(book));
         List<Book> books = bookService.getByAuthor("some author");
         assertEquals(1,books.size());
@@ -62,9 +62,21 @@ public class BookServiceTest {
 
     @Test
     public void shouldReturnBookForAvailableIsbn() {
-        Book book = new Book("some title", "some author", "123a");
         when(bookRepository.findByIsbn("123a")).thenReturn(book);
         Book expectedBook = bookService.getByIsbn("123a");
         assertEquals(expectedBook,book);
+    }
+
+    @Test
+    public void shouldReturnNullForUnavailableBookId() {
+        Book book = bookService.getByBookId("1233");
+        assertEquals(null,book);
+    }
+
+    @Test
+    public void shouldReturnBookForAvailableBookId() {
+        when(bookRepository.findByBookId("1233")).thenReturn(book);
+        Book book1 = bookService.getByBookId("1233");
+        assertEquals(book,book1);
     }
 }
