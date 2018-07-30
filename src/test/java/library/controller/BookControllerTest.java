@@ -1,5 +1,6 @@
 package library.controller;
 
+import library.domain.Book;
 import library.service.BookService;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,8 @@ public class BookControllerTest {
     @Mock
     private BookService bookService;
     private BookController controller;
+    @Mock
+    private Book book;
 
     @Before
     public void setUp() {
@@ -26,5 +29,11 @@ public class BookControllerTest {
     public void shouldCallBookServiceGetBookById() {
         controller.getBookById("12344");
         verify(bookService,times(1)).getByBookId("12344");
+    }
+
+    @Test
+    public void shouldCallBookServiceAddBook() {
+        controller.addBook(book);
+        verify(bookService,times(1)).addBook(book);
     }
 }

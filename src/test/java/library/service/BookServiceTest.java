@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -78,5 +80,11 @@ public class BookServiceTest {
         when(bookRepository.findByBookId("1233")).thenReturn(book);
         Book book1 = bookService.getByBookId("1233");
         assertEquals(book,book1);
+    }
+
+    @Test
+    public void shouldCallBookRepoSave() {
+        bookService.addBook(book);
+        verify(bookRepository,times(1)).save(book);
     }
 }

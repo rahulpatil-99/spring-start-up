@@ -3,10 +3,7 @@ package library.controller;
 import library.domain.Book;
 import library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/book")
 @RestController
@@ -21,5 +18,10 @@ public class BookController {
     @GetMapping("/{id}")
     public Book getBookById(@PathVariable String id) {
         return bookService.getByBookId(id);
+    }
+
+    @PostMapping("/add")
+    public void addBook(@RequestBody Book book) {
+        bookService.addBook(book);
     }
 }
