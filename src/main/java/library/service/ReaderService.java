@@ -34,4 +34,12 @@ public class ReaderService {
     public void removeByFirstName(String firstName) {
         readerRepository.deleteByFirstName(firstName);
     }
+
+    public void updateLastNameBy(String firstName, String lastName) {
+        List<Reader> readers = readerRepository.findByFirstName(firstName);
+        readers.stream().forEach(reader -> {
+            reader.setLastName(lastName);
+            readerRepository.save(reader);
+        });
+    }
 }

@@ -36,4 +36,9 @@ public class ReaderController {
     public void deleteReader(@PathVariable String firstName) {
         readerService.removeByFirstName(firstName);
     }
+
+    @PutMapping("/update")
+    public void updateLastName(@RequestParam String firstName,@RequestParam String lastName) {
+        readerService.updateLastNameBy(firstName,lastName);
+    }
 }

@@ -44,4 +44,12 @@ public class ReaderControllerTest {
         controller.deleteReader("fName");
         verify(readerService,times(1)).removeByFirstName("fName");
     }
+
+    @Test
+    public void shouldCallReaderServiceUpdateLastNameByFirstName() {
+        Reader reader = new Reader("fName","lName");
+        controller.createReader(reader);
+        controller.updateLastName("fName","LastName");
+        verify(readerService,times(1)).updateLastNameBy("fName","LastName");
+    }
 }

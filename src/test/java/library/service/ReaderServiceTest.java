@@ -93,4 +93,13 @@ public class ReaderServiceTest {
         readerService.removeByFirstName("someName");
         verify(readerRepository,times(1)).deleteByFirstName("someName");
     }
+
+    @Test
+    public void shouldCallReaderRepositorySaveMethodWithUpdatedReader() {
+        Reader reader = new Reader("Ram", "Singh");
+        when(readerRepository.findByFirstName("Ram")).thenReturn(Collections.singletonList(reader));
+        readerService.updateLastNameBy("Ram","bhai");
+        reader.setLastName("bhai");
+        verify(readerRepository,times(1)).save(reader);
+    }
 }
