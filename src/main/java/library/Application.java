@@ -1,6 +1,7 @@
 package library;
 
 import library.domain.Reader;
+import library.repository.BookRepository;
 import library.repository.ReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,12 +14,16 @@ public class Application implements CommandLineRunner {
     @Autowired
     private ReaderRepository repository;
 
+    @Autowired
+    private BookRepository bookRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Override
     public void run(String... args) throws Exception {
+        bookRepository.deleteAll();
         repository.deleteAll();
 
         // save a couple of customers

@@ -36,4 +36,10 @@ public class BookControllerTest {
         controller.addBook(book);
         verify(bookService,times(1)).addBook(book);
     }
+
+    @Test
+    public void shouldCallBookServiceGetIdsByTitle() {
+        controller.getIdsByTitle("title");
+        verify(bookService,times(1)).getIdsByTitle("title");
+    }
 }

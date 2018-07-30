@@ -5,6 +5,8 @@ import library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/book")
 @RestController
 public class BookController {
@@ -23,5 +25,10 @@ public class BookController {
     @PostMapping("/add")
     public void addBook(@RequestBody Book book) {
         bookService.addBook(book);
+    }
+
+    @GetMapping("/ids/{title}")
+    public List<String> getIdsByTitle(@PathVariable String title) {
+        return bookService.getIdsByTitle(title);
     }
 }

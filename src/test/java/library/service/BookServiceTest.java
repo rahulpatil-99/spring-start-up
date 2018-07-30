@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,5 +87,20 @@ public class BookServiceTest {
     public void shouldCallBookRepoSave() {
         bookService.addBook(book);
         verify(bookRepository,times(1)).save(book);
+    }
+
+    @Test
+    public void shouldReturnListOfIdsForGivenTitle() {
+        Book book1 = new Book("some title", "author", "isbn");
+        Book book2 = new Book("some title", "author", "isbn");
+        List<Book> books = new ArrayList<>();
+        books.add(book1);
+        books.add(book2);
+        List<String> expectedIds = new ArrayList<>();
+        expectedIds.add(book1.bookId);
+        expectedIds.add(book2.bookId);
+        when(bookRepository.findByTitle("some title")).thenReturn(books);
+        List<String> ids = bookService.getIdsByTitle("some title");
+        assertEquals(expectedIds,ids);
     }
 }
