@@ -103,4 +103,10 @@ public class BookServiceTest {
         List<String> ids = bookService.getIdsByTitle("some title");
         assertEquals(expectedIds,ids);
     }
+
+    @Test
+    public void shouldCallBookRepoDeleteByBookId() {
+        bookService.removeBook("12345");
+        verify(bookRepository,times(1)).deleteByBookId("12345");
+    }
 }

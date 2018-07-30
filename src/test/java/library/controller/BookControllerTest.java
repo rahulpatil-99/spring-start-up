@@ -42,4 +42,10 @@ public class BookControllerTest {
         controller.getIdsByTitle("title");
         verify(bookService,times(1)).getIdsByTitle("title");
     }
+
+    @Test
+    public void shouldCallBookServiceRemoveBook() {
+        controller.removeBook("12345");
+        verify(bookService,times(1)).removeBook("12345");
+    }
 }

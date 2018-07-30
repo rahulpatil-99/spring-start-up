@@ -40,4 +40,8 @@ public class BookService {
         List<Book> books = bookRepository.findByTitle(title);
         return books.stream().map(book -> book.bookId ).collect(Collectors.toList());
     }
+
+    public void removeBook(String bookId) {
+        bookRepository.deleteByBookId(bookId);
+    }
 }

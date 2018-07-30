@@ -31,4 +31,9 @@ public class BookController {
     public List<String> getIdsByTitle(@PathVariable String title) {
         return bookService.getIdsByTitle(title);
     }
+
+    @DeleteMapping("/remove")
+    public void removeBook(@RequestBody String bookId) {
+        bookService.removeBook(bookId);
+    }
 }
