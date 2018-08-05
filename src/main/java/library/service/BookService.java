@@ -2,6 +2,7 @@ package library.service;
 
 import library.domain.Book;
 import library.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class BookService {
 
     private BookRepository bookRepository;
 
+    @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -38,7 +40,7 @@ public class BookService {
 
     public List<String> getIdsByTitle(String title) {
         List<Book> books = bookRepository.findByTitle(title);
-        return books.stream().map(book -> book.bookId ).collect(Collectors.toList());
+        return books.stream().map(book -> book.bookId).collect(Collectors.toList());
     }
 
     public void removeBook(String bookId) {

@@ -13,8 +13,6 @@ public class Reader {
     public String lastName;
     public Date dob;
 
-    public Reader() {}
-
     public Reader(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
