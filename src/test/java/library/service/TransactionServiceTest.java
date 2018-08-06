@@ -1,5 +1,6 @@
 package library.service;
 
+import library.domain.Stock;
 import library.domain.Transaction;
 import library.repository.TransactionRepository;
 import org.junit.Before;
@@ -23,17 +24,44 @@ public class TransactionServiceTest {
     @Mock
     private TransactionRepository repository;
     @Mock
-    private Transaction transaction;
+    private StockService stockService;
 
     @Before
     public void setUp() {
-        service = new TransactionService(repository);
+        service = new TransactionService(repository,stockService);
     }
 
     @Test
-    public void shouldCallTransactionRepoSave() {
+    public void shouldAddTransactionIfCopyIsPresent() {
+        Stock copy = new Stock("1-2", "1223", true);
+        when(stockService.getByCopyId("1-2")).thenReturn(copy);
+        Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
         service.addTransaction(transaction);
         verify(repository,times(1)).save(transaction);
+        verify(stockService,times(1)).makeUnAvailable("1-2");
+    }
+
+    @Test
+    public void shouldThrowExceptionIfCopyIsNotPresentInStock() {
+        Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
+        try {
+            service.addTransaction(transaction);
+        } catch (RuntimeException ex){
+            assertEquals("Copy is Not present in stock",ex.getMessage());
+        }
+
+    }
+
+    @Test
+    public void shouldThrowExceptionIfCopyIsNotAvailable() {
+        Stock copy = new Stock("1-2", "1223", false);
+        when(stockService.getByCopyId("1-2")).thenReturn(copy);
+        Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
+        try{
+            service.addTransaction(transaction);
+        }catch(RuntimeException ex){
+            assertEquals("Copy is Unavailable",ex.getMessage());
+        }
     }
 
     @Test
@@ -50,6 +78,7 @@ public class TransactionServiceTest {
         Transaction actualTransaction = service.getTransaction("12234556");
         transaction.setReturnDate(new Date());
         assertEquals(actualTransaction,transaction);
+        verify(stockService,times(1)).makeAvailable("1-2");
     }
 
     @Test

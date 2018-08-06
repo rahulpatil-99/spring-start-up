@@ -1,5 +1,6 @@
 package library.service;
 
+import library.domain.Stock;
 import library.domain.Transaction;
 import library.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,26 @@ import java.util.stream.Collectors;
 public class TransactionService {
 
     private TransactionRepository repository;
+    private StockService stockService;
 
     @Autowired
-    public TransactionService(TransactionRepository repository) {
+    public TransactionService(TransactionRepository repository, StockService stockService) {
         this.repository = repository;
+        this.stockService = stockService;
     }
 
     public void addTransaction(Transaction transaction) {
-        repository.save(transaction);
+        Stock copy = stockService.getByCopyId(transaction.copyId);
+        if(copy instanceof Stock){
+            if(copy.availability){
+                repository.save(transaction);
+                stockService.makeUnAvailable(copy.copyId);
+            } else {
+                throw new RuntimeException("Copy is Unavailable");
+            }
+        } else{
+            throw new RuntimeException("Copy is Not present in stock");
+        }
     }
 
     public Transaction getTransaction(String transactionId) {
@@ -28,7 +41,9 @@ public class TransactionService {
     }
 
     public void returnedBookForTransaction(String transactionId) {
-        this.getTransaction(transactionId).setReturnDate(new Date());
+        Transaction transaction = this.getTransaction(transactionId);
+        transaction.setReturnDate(new Date());
+        this.stockService.makeAvailable(transaction.copyId);
     }
 
     public List<Transaction> getCurrentTransactionForUser(String readerId) {

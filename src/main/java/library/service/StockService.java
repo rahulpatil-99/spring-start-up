@@ -30,6 +30,10 @@ public class StockService {
         }
     }
 
+    public Stock getByCopyId(String copyId){
+        return repository.findByCopyId(copyId);
+    }
+
     public List<Stock> getByIsbn(String isbn) {
         return repository.findByIsbn(isbn);
     }
@@ -43,5 +47,17 @@ public class StockService {
                 .stream()
                 .filter(copy -> copy.availability)
                 .collect(Collectors.toList());
+    }
+
+    public void makeAvailable(String copyId) {
+        Stock copy = this.getByCopyId(copyId);
+        copy.availability=true;
+        repository.save(copy);
+    }
+
+    public void makeUnAvailable(String copyId) {
+        Stock copy = this.getByCopyId(copyId);
+        copy.availability=false;
+        repository.save(copy);
     }
 }

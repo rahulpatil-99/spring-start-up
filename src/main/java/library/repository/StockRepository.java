@@ -9,4 +9,6 @@ public interface StockRepository extends MongoRepository<Stock,String> {
     public List<Stock> findByIsbn(String isbn);
 
     List<Stock> findByAvailability(boolean status);
+
+    Stock findByCopyId(String copyId);
 }
