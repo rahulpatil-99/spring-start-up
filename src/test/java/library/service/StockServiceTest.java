@@ -1,5 +1,6 @@
 package library.service;
 
+import library.domain.Book;
 import library.domain.Stock;
 import library.repository.StockRepository;
 import org.junit.Before;
@@ -13,9 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StockServiceTest {
@@ -24,19 +23,28 @@ public class StockServiceTest {
     @Mock
     private StockRepository repository;
     @Mock
-    private Stock copy;
+    private BookService bookService;
+    @Mock
+    private Book book;
 
     @Before
     public void setUp() {
-        this.service = new StockService(repository);
+        this.service = new StockService(repository,bookService);
     }
 
     @Test
-    public void shouldCallStockRepoSaveMethod() {
+    public void shouldAllowToAddCopyIfBookWithIsbnIsPresentInBooks() {
+        Stock copy = new Stock("1-1", "1234", true);
+        when(bookService.getByIsbn("1234")).thenReturn(book);
         service.addCopy(copy);
         verify(repository,times(1)).save(copy);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowExceptionIfBookWithIsbnIsNotPresentInBooks() {
+        Stock copy = new Stock("1-1", "1234", true);
+        service.addCopy(copy);
+    }
 
     @Test
     public void shouldCallStockRepoFindByIsbn() {
