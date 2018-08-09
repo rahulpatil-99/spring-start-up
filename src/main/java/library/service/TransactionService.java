@@ -2,6 +2,8 @@ package library.service;
 
 import library.domain.Stock;
 import library.domain.Transaction;
+import library.exception.CopyAlreadyBoughtException;
+import library.exception.CopyNotFoundException;
 import library.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +24,17 @@ public class TransactionService {
         this.stockService = stockService;
     }
 
-    public void addTransaction(Transaction transaction) {
+    public void addTransaction(Transaction transaction) throws CopyAlreadyBoughtException, CopyNotFoundException {
         Stock copy = stockService.getByCopyId(transaction.copyId);
         if(copy instanceof Stock){
             if(copy.availability){
                 repository.save(transaction);
                 stockService.makeUnAvailable(copy.copyId);
             } else {
-                throw new RuntimeException("Copy is Unavailable");
+                throw new CopyAlreadyBoughtException();
             }
         } else{
-            throw new RuntimeException("Copy is Not present in stock");
+           throw new CopyNotFoundException();
         }
     }
 
@@ -47,6 +49,8 @@ public class TransactionService {
     }
 
     public List<Transaction> getCurrentTransactionForUser(String readerId) {
-        return repository.getByReaderId(readerId).stream().filter(transaction -> transaction.returnDate==null).collect(Collectors.toList());
+        return repository.getByReaderId(readerId).stream()
+                .filter(transaction -> transaction.returnDate==null)
+                .collect(Collectors.toList());
     }
 }

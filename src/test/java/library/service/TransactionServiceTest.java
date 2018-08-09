@@ -2,6 +2,8 @@ package library.service;
 
 import library.domain.Stock;
 import library.domain.Transaction;
+import library.exception.CopyAlreadyBoughtException;
+import library.exception.CopyNotFoundException;
 import library.repository.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +34,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void shouldAddTransactionIfCopyIsPresent() {
+    public void shouldAddTransactionIfCopyIsPresent() throws CopyAlreadyBoughtException, CopyNotFoundException {
         Stock copy = new Stock("1-2", "1223", true);
         when(stockService.getByCopyId("1-2")).thenReturn(copy);
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
@@ -46,8 +48,10 @@ public class TransactionServiceTest {
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
         try {
             service.addTransaction(transaction);
-        } catch (RuntimeException ex){
-            assertEquals("Copy is Not present in stock",ex.getMessage());
+        } catch (CopyNotFoundException e) {
+            assertEquals("Copy is not available in the stock",e.getMessage());
+        } catch (CopyAlreadyBoughtException e) {
+            e.printStackTrace();
         }
 
     }
@@ -59,8 +63,10 @@ public class TransactionServiceTest {
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
         try{
             service.addTransaction(transaction);
-        }catch(RuntimeException ex){
-            assertEquals("Copy is Unavailable",ex.getMessage());
+        } catch (CopyNotFoundException e) {
+            e.printStackTrace();
+        } catch (CopyAlreadyBoughtException e) {
+            assertEquals("Currently copy is bought by another reader",e.getMessage());
         }
     }
 
