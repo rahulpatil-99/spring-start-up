@@ -4,6 +4,7 @@ import library.domain.Stock;
 import library.domain.Transaction;
 import library.exception.CopyAlreadyBoughtException;
 import library.exception.CopyNotFoundException;
+import library.exception.ReaderNotRegisteredException;
 import library.repository.TransactionRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,15 +28,18 @@ public class TransactionServiceTest {
     private TransactionRepository repository;
     @Mock
     private StockService stockService;
+    @Mock
+    private ReaderService readerService;
 
     @Before
     public void setUp() {
-        service = new TransactionService(repository,stockService);
+        service = new TransactionService(repository,stockService,readerService);
     }
 
     @Test
-    public void shouldAddTransactionIfCopyIsPresent() throws CopyAlreadyBoughtException, CopyNotFoundException {
+    public void shouldAddTransactionIfCopyIsPresent() throws CopyAlreadyBoughtException, CopyNotFoundException, ReaderNotRegisteredException {
         Stock copy = new Stock("1-2", "1223", true);
+        when(readerService.isRegistered("123")).thenReturn(true);
         when(stockService.getByCopyId("1-2")).thenReturn(copy);
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
         service.addTransaction(transaction);
@@ -43,31 +47,20 @@ public class TransactionServiceTest {
         verify(stockService,times(1)).makeUnAvailable("1-2");
     }
 
-    @Test
-    public void shouldThrowExceptionIfCopyIsNotPresentInStock() {
+    @Test(expected = CopyNotFoundException.class)
+    public void shouldThrowExceptionIfCopyIsNotPresentInStock() throws CopyNotFoundException, CopyAlreadyBoughtException, ReaderNotRegisteredException {
+        when(readerService.isRegistered("123")).thenReturn(true);
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
-        try {
             service.addTransaction(transaction);
-        } catch (CopyNotFoundException e) {
-            assertEquals("Copy is not available in the stock",e.getMessage());
-        } catch (CopyAlreadyBoughtException e) {
-            e.printStackTrace();
-        }
-
     }
 
-    @Test
-    public void shouldThrowExceptionIfCopyIsNotAvailable() {
+    @Test(expected = CopyAlreadyBoughtException.class)
+    public void shouldThrowExceptionIfCopyIsNotAvailable() throws CopyNotFoundException, CopyAlreadyBoughtException, ReaderNotRegisteredException {
+        when(readerService.isRegistered("123")).thenReturn(true);
         Stock copy = new Stock("1-2", "1223", false);
         when(stockService.getByCopyId("1-2")).thenReturn(copy);
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
-        try{
             service.addTransaction(transaction);
-        } catch (CopyNotFoundException e) {
-            e.printStackTrace();
-        } catch (CopyAlreadyBoughtException e) {
-            assertEquals("Currently copy is bought by another reader",e.getMessage());
-        }
     }
 
     @Test
@@ -98,5 +91,11 @@ public class TransactionServiceTest {
         when(repository.getByReaderId("111")).thenReturn(transactions);
         List<Transaction> transactionsForUser = service.getCurrentTransactionForUser("111");
         assertEquals(transactionsForUser,Collections.singletonList(transaction2));
+    }
+
+    @Test(expected = ReaderNotRegisteredException.class)
+    public void shouldThrowExceptionWhenReaderIsNotPresent() throws CopyAlreadyBoughtException, CopyNotFoundException, ReaderNotRegisteredException {
+        when(readerService.isRegistered("123")).thenReturn(false);
+        service.addTransaction(new Transaction("123","12-1",new Date(12-6-2018)));
     }
 }

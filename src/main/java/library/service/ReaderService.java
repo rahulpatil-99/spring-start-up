@@ -44,4 +44,8 @@ public class ReaderService {
             readerRepository.save(reader);
         });
     }
+
+    public boolean isRegistered(String readerId) {
+        return readerRepository.findByReaderId(readerId) != null;
+    }
 }

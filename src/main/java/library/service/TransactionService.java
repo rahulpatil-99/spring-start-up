@@ -4,6 +4,7 @@ import library.domain.Stock;
 import library.domain.Transaction;
 import library.exception.CopyAlreadyBoughtException;
 import library.exception.CopyNotFoundException;
+import library.exception.ReaderNotRegisteredException;
 import library.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,19 @@ public class TransactionService {
 
     private TransactionRepository repository;
     private StockService stockService;
+    private ReaderService readerService;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, StockService stockService) {
+    public TransactionService(TransactionRepository repository, StockService stockService,ReaderService readerService) {
         this.repository = repository;
         this.stockService = stockService;
+        this.readerService = readerService;
     }
 
-    public void addTransaction(Transaction transaction) throws CopyAlreadyBoughtException, CopyNotFoundException {
+    public void addTransaction(Transaction transaction) throws CopyAlreadyBoughtException, CopyNotFoundException, ReaderNotRegisteredException {
+        if(!readerService.isRegistered(transaction.readerId)){
+            throw new ReaderNotRegisteredException();
+        }
         Stock copy = stockService.getByCopyId(transaction.copyId);
         if(copy instanceof Stock){
             if(copy.availability){

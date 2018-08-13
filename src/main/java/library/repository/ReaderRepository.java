@@ -14,4 +14,5 @@ public interface ReaderRepository extends MongoRepository<Reader,String> {
     public List<Reader> findByDOB(Date date);
 
     public void deleteByFirstName(String firstName);
+    Reader findByReaderId(String id);
 }

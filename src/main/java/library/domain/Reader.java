@@ -7,7 +7,7 @@ import java.util.Date;
 public class Reader {
 
     @Id
-    public String id;
+    public String readerId;
 
     public String firstName;
     public String lastName;
@@ -25,7 +25,7 @@ public class Reader {
     @Override
     public String toString() {
         return "Reader{" +
-                "id='" + id + '\'' +
+                "readerId='" + readerId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", dob=" + dob +
