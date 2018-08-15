@@ -1,7 +1,7 @@
 package library.service;
 
 import library.domain.Book;
-import library.domain.Stock;
+import library.domain.Copy;
 import library.repository.StockRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +17,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StockServiceTest {
+public class CopyServiceTest {
 
-    private StockService service;
+    private CopyService service;
     @Mock
     private StockRepository repository;
     @Mock
@@ -29,12 +29,12 @@ public class StockServiceTest {
 
     @Before
     public void setUp() {
-        this.service = new StockService(repository,bookService);
+        this.service = new CopyService(repository,bookService);
     }
 
     @Test
     public void shouldAllowToAddCopyIfBookWithIsbnIsPresentInBooks() {
-        Stock copy = new Stock("1-1", "1234", true);
+        Copy copy = new Copy("1-1", "1234", true);
         when(bookService.getByIsbn("1234")).thenReturn(book);
         service.addCopy(copy);
         verify(repository,times(1)).save(copy);
@@ -42,7 +42,7 @@ public class StockServiceTest {
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowExceptionIfBookWithIsbnIsNotPresentInBooks() {
-        Stock copy = new Stock("1-1", "1234", true);
+        Copy copy = new Copy("1-1", "1234", true);
         service.addCopy(copy);
     }
 
@@ -60,13 +60,13 @@ public class StockServiceTest {
 
     @Test
     public void shouldGetAvailableCopiesForGivenIsbn() {
-        List<Stock> stocks = new ArrayList<>();
-        Stock copy1 = new Stock("1-1", "1234", true);
-        stocks.add(copy1);
-        stocks.add(new Stock("1-2","1234",false));
+        List<Copy> copies = new ArrayList<>();
+        Copy copy1 = new Copy("1-1", "1234", true);
+        copies.add(copy1);
+        copies.add(new Copy("1-2","1234",false));
 
-        when(repository.findByIsbn("1234")).thenReturn(stocks);
-        List<Stock> availableCopies = service.getAvailableCopiesFor("1234");
+        when(repository.findByIsbn("1234")).thenReturn(copies);
+        List<Copy> availableCopies = service.getAvailableCopiesFor("1234");
         assertEquals(Collections.singletonList(copy1),availableCopies);
     }
 }

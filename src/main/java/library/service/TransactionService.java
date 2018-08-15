@@ -1,6 +1,6 @@
 package library.service;
 
-import library.domain.Stock;
+import library.domain.Copy;
 import library.domain.Transaction;
 import library.exception.CopyAlreadyBoughtException;
 import library.exception.CopyNotFoundException;
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 public class TransactionService {
 
     private TransactionRepository repository;
-    private StockService stockService;
+    private CopyService copyService;
     private ReaderService readerService;
 
     @Autowired
-    public TransactionService(TransactionRepository repository, StockService stockService,ReaderService readerService) {
+    public TransactionService(TransactionRepository repository, CopyService copyService, ReaderService readerService) {
         this.repository = repository;
-        this.stockService = stockService;
+        this.copyService = copyService;
         this.readerService = readerService;
     }
 
@@ -31,11 +31,11 @@ public class TransactionService {
         if(!readerService.isRegistered(transaction.readerId)){
             throw new ReaderNotRegisteredException();
         }
-        Stock copy = stockService.getByCopyId(transaction.copyId);
-        if(copy instanceof Stock){
+        Copy copy = copyService.getByCopyId(transaction.copyId);
+        if(copy != null){
             if(copy.availability){
                 repository.save(transaction);
-                stockService.makeUnAvailable(copy.copyId);
+                copyService.makeUnAvailable(copy.copyId);
             } else {
                 throw new CopyAlreadyBoughtException();
             }
@@ -51,7 +51,7 @@ public class TransactionService {
     public void returnedBookForTransaction(String transactionId) {
         Transaction transaction = this.getTransaction(transactionId);
         transaction.setReturnDate(new Date());
-        this.stockService.makeAvailable(transaction.copyId);
+        this.copyService.makeAvailable(transaction.copyId);
     }
 
     public List<Transaction> getCurrentTransactionForUser(String readerId) {

@@ -1,6 +1,6 @@
 package library.service;
 
-import library.domain.Stock;
+import library.domain.Copy;
 import library.domain.Transaction;
 import library.exception.CopyAlreadyBoughtException;
 import library.exception.CopyNotFoundException;
@@ -27,24 +27,24 @@ public class TransactionServiceTest {
     @Mock
     private TransactionRepository repository;
     @Mock
-    private StockService stockService;
+    private CopyService copyService;
     @Mock
     private ReaderService readerService;
 
     @Before
     public void setUp() {
-        service = new TransactionService(repository,stockService,readerService);
+        service = new TransactionService(repository, copyService,readerService);
     }
 
     @Test
     public void shouldAddTransactionIfCopyIsPresent() throws CopyAlreadyBoughtException, CopyNotFoundException, ReaderNotRegisteredException {
-        Stock copy = new Stock("1-2", "1223", true);
+        Copy copy = new Copy("1-2", "1223", true);
         when(readerService.isRegistered("123")).thenReturn(true);
-        when(stockService.getByCopyId("1-2")).thenReturn(copy);
+        when(copyService.getByCopyId("1-2")).thenReturn(copy);
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
         service.addTransaction(transaction);
         verify(repository,times(1)).save(transaction);
-        verify(stockService,times(1)).makeUnAvailable("1-2");
+        verify(copyService,times(1)).makeUnAvailable("1-2");
     }
 
     @Test(expected = CopyNotFoundException.class)
@@ -57,8 +57,8 @@ public class TransactionServiceTest {
     @Test(expected = CopyAlreadyBoughtException.class)
     public void shouldThrowExceptionIfCopyIsNotAvailable() throws CopyNotFoundException, CopyAlreadyBoughtException, ReaderNotRegisteredException {
         when(readerService.isRegistered("123")).thenReturn(true);
-        Stock copy = new Stock("1-2", "1223", false);
-        when(stockService.getByCopyId("1-2")).thenReturn(copy);
+        Copy copy = new Copy("1-2", "1223", false);
+        when(copyService.getByCopyId("1-2")).thenReturn(copy);
         Transaction transaction = new Transaction("123", "1-2", new Date(20-7-2018));
             service.addTransaction(transaction);
     }
@@ -77,7 +77,7 @@ public class TransactionServiceTest {
         Transaction actualTransaction = service.getTransaction("12234556");
         transaction.setReturnDate(new Date());
         assertEquals(actualTransaction,transaction);
-        verify(stockService,times(1)).makeAvailable("1-2");
+        verify(copyService,times(1)).makeAvailable("1-2");
     }
 
     @Test

@@ -1,14 +1,14 @@
 package library.repository;
 
-import library.domain.Stock;
+import library.domain.Copy;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface StockRepository extends MongoRepository<Stock,String> {
-    public List<Stock> findByIsbn(String isbn);
+public interface StockRepository extends MongoRepository<Copy,String> {
+    public List<Copy> findByIsbn(String isbn);
 
-    List<Stock> findByAvailability(boolean status);
+    List<Copy> findByAvailability(boolean status);
 
-    Stock findByCopyId(String copyId);
+    Copy findByCopyId(String copyId);
 }
