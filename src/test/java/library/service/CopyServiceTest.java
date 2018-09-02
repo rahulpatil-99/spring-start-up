@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -68,5 +70,21 @@ public class CopyServiceTest {
         when(repository.findByIsbn("1234")).thenReturn(copies);
         List<Copy> availableCopies = service.getAvailableCopiesFor("1234");
         assertEquals(Collections.singletonList(copy1),availableCopies);
+    }
+
+    @Test
+    public void shouldMakeCopyUnavailable() {
+        Copy copy = new Copy("1-1", "1234", true);
+        when(repository.findByCopyId("1-1")).thenReturn(copy);
+        service.makeUnAvailable("1-1");
+        assertFalse(copy.availability);
+    }
+
+    @Test
+    public void shouldMakeCopyAvailable() {
+        Copy copy = new Copy("1-1", "1234", false);
+        when(repository.findByCopyId("1-1")).thenReturn(copy);
+        service.makeAvailable("1-1");
+        assertTrue(copy.availability);
     }
 }

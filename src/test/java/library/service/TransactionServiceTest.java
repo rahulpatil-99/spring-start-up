@@ -89,7 +89,7 @@ public class TransactionServiceTest {
         transactions.add(transaction1);
         transactions.add(transaction2);
         when(repository.getByReaderId("111")).thenReturn(transactions);
-        List<Transaction> transactionsForUser = service.getCurrentTransactionForUser("111");
+        List<Transaction> transactionsForUser = service.getCurrentTransactionsForReader("111");
         assertEquals(transactionsForUser,Collections.singletonList(transaction2));
     }
 

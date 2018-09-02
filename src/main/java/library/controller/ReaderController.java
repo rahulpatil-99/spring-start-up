@@ -3,7 +3,6 @@ package library.controller;
 import library.domain.Reader;
 import library.service.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class ReaderController {
         return readerService.getByName(readerName);
     }
 
-    @PostMapping(value = "/create",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create")
     public void createReader(@RequestBody Reader reader){
         readerService.createReader(reader);
     }

@@ -54,7 +54,7 @@ public class TransactionService {
         this.copyService.makeAvailable(transaction.copyId);
     }
 
-    public List<Transaction> getCurrentTransactionForUser(String readerId) {
+    public List<Transaction> getCurrentTransactionsForReader(String readerId) {
         return repository.getByReaderId(readerId).stream()
                 .filter(transaction -> transaction.returnDate==null)
                 .collect(Collectors.toList());
