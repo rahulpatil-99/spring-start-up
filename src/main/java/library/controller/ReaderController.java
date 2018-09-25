@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4000")
 @RestController
 public class ReaderController {
     private ReaderService readerService;
